@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="exppond">
+    <output-path>$PROJECT_DIR$/out/artifacts/exppond</output-path>
+    <root id="archive" name="exppond.jar">
+      <element id="module-output" name="exppond" />
+    </root>
+  </artifact>
+</component>

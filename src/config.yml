@@ -1,0 +1,11 @@
+location:
+  world: "world"
+  1: "-194/37/25"
+  2: "-171/37/19"
+#速度 单位 tick
+speed: 20
+#每次的数量
+amount: 5
+title:
+  join: '{"main":"您已进入经验池","sub":"请享受经验雨"}'
+  quit: '{"main":"您已离开经验池","sub":"欢迎下次再来"}'

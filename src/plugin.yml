@@ -1,0 +1,9 @@
+name: exppond
+main: com.xbaimiao.minecraft.exppond.Main
+version: 1.0.0
+api-version: 1.13
+author: xbaimiao
+commands:
+  exppond:
+    permission: op
+    permission-message: you not have permission
