@@ -13,7 +13,7 @@ public class Utils {
     public static boolean in(int a, int b, int c) {
         int max = Math.max(b, c);
         int min = Math.min(b, c);
-        return a < max && a > min;
+        return a <= max && a >= min;
     }
 
 }

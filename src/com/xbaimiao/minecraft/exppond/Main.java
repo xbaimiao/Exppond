@@ -7,40 +7,45 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Main extends JavaPlugin {
 
     private static Main instance;
     private static BukkitTask runnable;
-    private static final ArrayList<String> sendTitles = new ArrayList<>();
+    private static final HashSet<String> sendTitles = new HashSet<>();
+    /**
+     * 经验池内是否有玩家
+     */
+    private static boolean hasPlayer = false;
 
     public void onEnable() {
         (Main.instance = this).saveDefaultConfig();
-        task();
+        runnable = spawnTask();
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            hasPlayer = check();
+        }, 20, 20);
     }
 
     public static Main getInstance() {
         return Main.instance;
     }
 
-    private void task() {
-        runnable = new BukkitRunnable() {
-            public void run() {
-                if (!check()) {
-                    return;
-                }
-                for (int x = 0; x < Config.amount; ++x) {
-                    Config.getWorld().spawnEntity(Config.getRandom(), EntityType.THROWN_EXP_BOTTLE);
-                }
+    private @NotNull BukkitTask spawnTask() {
+        return Bukkit.getScheduler().runTaskTimer(this, () -> {
+            if (!hasPlayer) {
+                return;
             }
-        }.runTaskTimer(this, Config.speed, Config.speed);
+            for (int x = 0; x < Config.amount; ++x) {
+                Config.getWorld().spawnEntity(Config.getRandom(), EntityType.THROWN_EXP_BOTTLE);
+            }
+        }, Config.speed, Config.speed);
     }
 
     /**
@@ -85,29 +90,28 @@ public class Main extends JavaPlugin {
                 case "a":
                     setLocation(player, "1");
                     sender.sendMessage("设置a点成功");
-                    reloadConfig();
-                    Config.load();
-                    runnable.cancel();
-                    task();
                     break;
                 case "b":
                     setLocation(player, "2");
                     sender.sendMessage("设置b点成功");
-                    reloadConfig();
-                    Config.load();
-                    runnable.cancel();
-                    task();
                     break;
                 case "reload":
-                    reloadConfig();
-                    Config.load();
-                    runnable.cancel();
-                    task();
+                    reload();
                     sender.sendMessage("重载配置文件完成");
                     break;
             }
         }
         return true;
+    }
+
+    /**
+     * 重载插件
+     */
+    private void reload() {
+        reloadConfig();
+        Config.load();
+        runnable.cancel();
+        runnable = spawnTask();
     }
 
     @Override
