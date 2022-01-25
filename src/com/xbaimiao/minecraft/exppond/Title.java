@@ -2,6 +2,7 @@ package com.xbaimiao.minecraft.exppond;
 
 import com.google.gson.annotations.SerializedName;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author xbaimiao
@@ -15,7 +16,7 @@ public class Title {
     @SerializedName("sub")
     public String sub;
 
-    public void sendTo(Player player) {
+    public void sendTo(@NotNull Player player) {
         player.sendTitle(main, sub, 20, 30, 20);
     }
 

@@ -28,9 +28,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         (Main.instance = this).saveDefaultConfig();
         runnable = spawnTask();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
-            hasPlayer = check();
-        }, 20, 20);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> hasPlayer = check(), 20, 20);
     }
 
     public static Main getInstance() {
@@ -53,7 +51,7 @@ public class Main extends JavaPlugin {
      */
     private boolean check() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            Location location = onlinePlayer.getLocation();
+            Location location = onlinePlayer.getLocation().clone();
             if (Utils.in(location.getBlockX(), Config.maxX, Config.minX)) {
                 if (Utils.in(location.getBlockY(), Config.maxY, Config.minY)) {
                     if (Utils.in(location.getBlockZ(), Config.maxZ, Config.minZ)) {
