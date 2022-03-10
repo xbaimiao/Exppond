@@ -8,8 +8,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,7 +33,7 @@ public class Main extends JavaPlugin {
         return Main.instance;
     }
 
-    private @NotNull BukkitTask spawnTask() {
+    private BukkitTask spawnTask() {
         return Bukkit.getScheduler().runTaskTimer(this, () -> {
             if (!hasPlayer) {
                 return;
@@ -52,15 +50,17 @@ public class Main extends JavaPlugin {
     private boolean check() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             Location location = onlinePlayer.getLocation().clone();
-            if (Utils.in(location.getBlockX(), Config.maxX, Config.minX)) {
-                if (Utils.in(location.getBlockY(), Config.maxY, Config.minY)) {
-                    if (Utils.in(location.getBlockZ(), Config.maxZ, Config.minZ)) {
-                        //在经验池
-                        if (!sendTitles.contains(onlinePlayer.getName())) {
-                            Config.getTitleJoin().sendTo(onlinePlayer);
-                            sendTitles.add(onlinePlayer.getName());
+            if (location.getWorld().getName().equals(Config.getWorld().getName())){
+                if (Utils.in(location.getBlockX(), Config.maxX, Config.minX)) {
+                    if (Utils.in(location.getBlockY(), Config.maxY, Config.minY)) {
+                        if (Utils.in(location.getBlockZ(), Config.maxZ, Config.minZ)) {
+                            //在经验池
+                            if (!sendTitles.contains(onlinePlayer.getName())) {
+                                Config.getTitleJoin().sendTo(onlinePlayer);
+                                sendTitles.add(onlinePlayer.getName());
+                            }
+                            return true;
                         }
-                        return true;
                     }
                 }
             }
@@ -74,7 +74,7 @@ public class Main extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.isOp()) {
             return true;
         }
@@ -113,7 +113,7 @@ public class Main extends JavaPlugin {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         return new ArrayList<String>() {{
             add("a");
             add("b");
