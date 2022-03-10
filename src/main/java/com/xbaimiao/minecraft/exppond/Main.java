@@ -1,17 +1,14 @@
 package com.xbaimiao.minecraft.exppond;
 
+import com.xbaimiao.minecraft.exppond.command.CommandExecute;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class Main extends JavaPlugin {
 
@@ -27,6 +24,7 @@ public class Main extends JavaPlugin {
         (Main.instance = this).saveDefaultConfig();
         runnable = spawnTask();
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> hasPlayer = check(), 20, 20);
+        getCommand("exppond").setExecutor(new CommandExecute());
     }
 
     public static Main getInstance() {
@@ -50,7 +48,7 @@ public class Main extends JavaPlugin {
     private boolean check() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             Location location = onlinePlayer.getLocation().clone();
-            if (location.getWorld().getName().equals(Config.getWorld().getName())){
+            if (location.getWorld().getName().equals(Config.getWorld().getName())) {
                 if (Utils.in(location.getBlockX(), Config.maxX, Config.minX)) {
                     if (Utils.in(location.getBlockY(), Config.maxY, Config.minY)) {
                         if (Utils.in(location.getBlockZ(), Config.maxZ, Config.minZ)) {
@@ -73,55 +71,17 @@ public class Main extends JavaPlugin {
         return false;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.isOp()) {
-            return true;
-        }
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (args.length <= 0) {
-                sender.sendMessage("§a usage: a | b | reload");
-                return true;
-            }
-            switch (args[0]) {
-                case "a":
-                    setLocation(player, "1");
-                    sender.sendMessage("设置a点成功");
-                    break;
-                case "b":
-                    setLocation(player, "2");
-                    sender.sendMessage("设置b点成功");
-                    break;
-                case "reload":
-                    reload();
-                    sender.sendMessage("重载配置文件完成");
-                    break;
-            }
-        }
-        return true;
-    }
-
     /**
      * 重载插件
      */
-    private void reload() {
+    public void reload() {
         reloadConfig();
         Config.load();
         runnable.cancel();
         runnable = spawnTask();
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return new ArrayList<String>() {{
-            add("a");
-            add("b");
-            add("reload");
-        }};
-    }
-
-    private void setLocation(Player player, String key) {
+    public void setLocation(Player player, String key) {
         Location location = player.getLocation().clone();
         getConfig().set("location.world", player.getWorld().getName());
         getConfig().set("location." + key, String.format("%s/%s/%s", location.getBlockX(), location.getBlockY(), location.getBlockZ()));
