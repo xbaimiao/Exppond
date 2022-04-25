@@ -1,4 +1,4 @@
-package com.xbaimiao.minecraft.exppond;
+package com.xbaimiao.minecraft.exppond.core;
 
 import com.google.gson.annotations.SerializedName;
 import org.bukkit.entity.Player;

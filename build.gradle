@@ -9,12 +9,12 @@ repositories {
     mavenCentral()
     maven {
         name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        url = 'https://run.xbaimiao.com/nexus/repository/maven-releases/'
     }
 }
 
 dependencies {
-    compileOnly 'org.bukkit:bukkit:1.13-R0.1-SNAPSHOT'
+    compileOnly 'public:spigot:1.17.1'
 }
 
 def targetJavaVersion = 8

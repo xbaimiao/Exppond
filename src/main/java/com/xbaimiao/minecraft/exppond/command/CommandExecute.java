@@ -2,7 +2,6 @@ package com.xbaimiao.minecraft.exppond.command;
 
 import com.xbaimiao.minecraft.exppond.Main;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;

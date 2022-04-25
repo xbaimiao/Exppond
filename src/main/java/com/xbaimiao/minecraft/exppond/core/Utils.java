@@ -1,4 +1,4 @@
-package com.xbaimiao.minecraft.exppond;
+package com.xbaimiao.minecraft.exppond.core;
 
 /**
  * @author xbaimiao

@@ -1,6 +1,7 @@
-package com.xbaimiao.minecraft.exppond;
+package com.xbaimiao.minecraft.exppond.core;
 
 import com.google.gson.Gson;
+import com.xbaimiao.minecraft.exppond.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
