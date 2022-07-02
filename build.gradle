@@ -8,13 +8,13 @@ version = '1.0.0'
 repositories {
     mavenCentral()
     maven {
-        name = 'spigotmc-repo'
-        url = 'https://run.xbaimiao.com/nexus/repository/maven-releases/'
+        name = 'fastmcmirror-repo'
+        url = 'https://repo.fastmcmirror.org/content/repository/releases/'
     }
 }
 
 dependencies {
-    compileOnly 'public:spigot:1.16.5'
+    compileOnly 'org.spigotmc:spigot:1.16.5'
 }
 
 def targetJavaVersion = 8
