@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
     maven {
         name = 'fastmcmirror-repo'
-        url = 'https://repo.fastmcmirror.org/content/repository/releases/'
+        url = 'https://repo.fastmcmirror.org/content/repositories/releases/'
     }
 }
 
