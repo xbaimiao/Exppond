@@ -32,7 +32,7 @@ public class CommandExecute implements TabExecutor {
         }
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (args.length <= 0) {
+            if (args.length == 0) {
                 sender.sendMessage("§a usage: a | b | reload");
                 return true;
             }

@@ -7,12 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashSet;
+import java.util.Objects;
 
-public class Main extends JavaPlugin {
+public class Main extends JavaPlugin implements Listener {
 
     private static Main instance;
     private static BukkitTask runnable;
@@ -25,6 +29,7 @@ public class Main extends JavaPlugin {
     public void onEnable() {
         (Main.instance = this).saveDefaultConfig();
         runnable = spawnTask();
+        Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> hasPlayer = check(), 20, 20);
         getCommand("exppond").setExecutor(new CommandExecute());
     }
@@ -44,27 +49,42 @@ public class Main extends JavaPlugin {
         }, Config.speed, Config.speed);
     }
 
+    @EventHandler
+    public void drop(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (inExpPond(player)) {
+            event.setCancelled(true);
+        }
+    }
+
+    // 玩家是否在经验内
+    private boolean inExpPond(Player player) {
+        Location location = player.getLocation().clone();
+        if (Objects.requireNonNull(location.getWorld()).getName().equals(Config.getWorld().getName())) {
+            if (Utils.in(location.getBlockX(), Config.maxX, Config.minX)) {
+                if (Utils.in(location.getBlockY(), Config.maxY, Config.minY)) {
+                    return Utils.in(location.getBlockZ(), Config.maxZ, Config.minZ);
+                }
+            }
+        }
+        return false;
+    }
+
+
     /**
      * @return 经验池内是否有玩家
      */
     private boolean check() {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            Location location = onlinePlayer.getLocation().clone();
-            if (location.getWorld().getName().equals(Config.getWorld().getName())) {
-                if (Utils.in(location.getBlockX(), Config.maxX, Config.minX)) {
-                    if (Utils.in(location.getBlockY(), Config.maxY, Config.minY)) {
-                        if (Utils.in(location.getBlockZ(), Config.maxZ, Config.minZ)) {
-                            //在经验池
-                            if (!sendTitles.contains(onlinePlayer.getName())) {
-                                Config.getTitleJoin().sendTo(onlinePlayer);
-                                sendTitles.add(onlinePlayer.getName());
-                            }
-                            return true;
-                        }
-                    }
+            if (inExpPond(onlinePlayer)) {
+                //进入经验池
+                if (!sendTitles.contains(onlinePlayer.getName())) {
+                    Config.getTitleJoin().sendTo(onlinePlayer);
+                    sendTitles.add(onlinePlayer.getName());
                 }
+                return true;
             }
-            //不在经验池
+            //离开
             if (sendTitles.contains(onlinePlayer.getName())) {
                 Config.getTitleQuit().sendTo(onlinePlayer);
                 sendTitles.remove(onlinePlayer.getName());
